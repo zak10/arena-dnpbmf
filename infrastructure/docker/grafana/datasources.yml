@@ -1,0 +1,28 @@
+# Grafana Datasources Configuration v9.5.0
+# Configures Prometheus as the default data source for metrics visualization
+
+apiVersion: 1
+
+# Define data sources available to Grafana
+datasources:
+  # Prometheus data source configuration
+  - name: Prometheus
+    type: prometheus
+    # Use proxy access mode for secure metric data retrieval through Grafana backend
+    access: proxy
+    # Internal Docker network URL for Prometheus service
+    url: http://prometheus:9090
+    # Set as default data source for all dashboards
+    isDefault: true
+    version: 1
+    # Prevent modifications through UI to maintain configuration integrity
+    editable: false
+    
+    # JSON data configuration for Prometheus connection
+    jsonData:
+      # Match Prometheus scrape interval for consistent metric collection
+      timeInterval: "15s"
+      # Set timeout for query execution to prevent long-running queries
+      queryTimeout: "30s"
+      # Use POST method for more reliable query execution
+      httpMethod: "POST"

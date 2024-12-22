@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
+    <meta name="supported-color-schemes" content="light">
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
+    <title>Request Created Successfully - Arena Platform</title>
+    <style>
+        /* Reset styles for email clients */
+        body, table, td, div, p, a {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.5;
+        }
+
+        /* Base styles */
+        body {
+            width: 100% !important;
+            height: 100% !important;
+            margin: 0;
+            padding: 0;
+            background-color: #F9FAFB;
+            color: #111827;
+        }
+
+        /* Container styles */
+        .email-container {
+            max-width: 600px !important;
+            margin: 0 auto;
+        }
+
+        /* Typography */
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1F2937;
+        }
+
+        p {
+            margin: 16px 0;
+            font-size: 16px;
+        }
+
+        /* Button styles */
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #4F46E5;
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            text-align: center;
+            -webkit-text-size-adjust: none;
+            mso-hide: all;
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 768px) {
+            .email-container {
+                width: 100% !important;
+                padding: 0 20px !important;
+            }
+            
+            h1 {
+                font-size: 20px !important;
+            }
+            
+            p {
+                font-size: 15px !important;
+            }
+        }
+
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #1F2937 !important;
+                color: #F9FAFB !important;
+            }
+            
+            .email-wrapper {
+                background-color: #111827 !important;
+            }
+            
+            h1 {
+                color: #F9FAFB !important;
+            }
+            
+            .button {
+                background-color: #6366F1 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Email preview text -->
+    <div style="display: none; max-height: 0; overflow: hidden;">
+        Your software evaluation request {{ request_id }} has been created successfully in Arena Platform.
+    </div>
+
+    <!-- Main container -->
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 600px; margin: 0 auto;">
+        <tr>
+            <td style="padding: 20px 0; text-align: center;">
+                <img src="{{ logo_url }}" width="120" height="40" alt="Arena Platform Logo" style="display: inline-block; border: 0; max-width: 120px;">
+            </td>
+        </tr>
+    </table>
+
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" class="email-container">
+        <tr>
+            <td style="background-color: #ffffff; padding: 40px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                <!-- Header -->
+                <h1 style="margin-bottom: 24px; text-align: center;">Request Created Successfully</h1>
+
+                <!-- Main content -->
+                <p style="margin-bottom: 24px;">Hi {{ user_name }},</p>
+                
+                <p>Your software evaluation request has been created successfully in Arena Platform. We'll start matching you with qualified vendors based on your requirements.</p>
+
+                <!-- Request details -->
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 24px 0;">
+                    <tr>
+                        <td style="padding: 16px; background-color: #F9FAFB; border-radius: 6px;">
+                            <p style="margin: 0; font-weight: 500;">Request Details:</p>
+                            <p style="margin: 8px 0;">Request ID: {{ request_id }}</p>
+                            <p style="margin: 8px 0;">Title: {{ request_title }}</p>
+                            <p style="margin: 8px 0;">Documents Uploaded: {{ document_count }}</p>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- Requirements summary -->
+                <p style="margin-bottom: 24px;">Your Requirements:</p>
+                <div style="padding: 16px; background-color: #F9FAFB; border-radius: 6px; margin-bottom: 24px;">
+                    {{ requirements_text|truncatewords:100 }}
+                </div>
+
+                <!-- CTA Button -->
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 24px 0;">
+                    <tr>
+                        <td align="center">
+                            <a href="{{ request_url }}" class="button" target="_blank" rel="noopener">
+                                View Request Details
+                            </a>
+                            <!--[if mso]>
+                            <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ request_url }}" style="height:40px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="#4F46E5">
+                                <w:anchorlock/>
+                                <center style="color:#ffffff;font-family:sans-serif;font-size:16px;font-weight:bold;">
+                                    View Request Details
+                                </center>
+                            </v:roundrect>
+                            <![endif]-->
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- Footer -->
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin-top: 40px; border-top: 1px solid #E5E7EB; padding-top: 20px;">
+                    <tr>
+                        <td style="text-align: center; color: #6B7280; font-size: 14px;">
+                            <p style="margin-bottom: 12px;">Need help? <a href="#" style="color: #4F46E5; text-decoration: none;">Contact our support team</a></p>
+                            <p style="margin: 0;">
+                                <a href="{{ dashboard_url }}" style="color: #4F46E5; text-decoration: none;">View Dashboard</a> • 
+                                <a href="#" style="color: #4F46E5; text-decoration: none;">Email Preferences</a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Accessibility enhancement for screen readers -->
+    <div role="contentinfo" aria-label="Email Footer" style="display: none;">
+        This email was sent by Arena Platform. To ensure delivery to your inbox, please add our email address to your contacts.
+    </div>
+</body>
+</html>

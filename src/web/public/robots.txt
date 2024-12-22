@@ -1,0 +1,58 @@
+# Version: 1.0
+# Last Updated: 2024
+# Purpose: Define web crawler access rules and security boundaries
+
+# Default rules for all crawlers
+User-agent: *
+
+# Public content - Allow indexing
+Allow: /
+Allow: /login
+Allow: /magic-link
+Allow: /about
+Allow: /contact
+Allow: /privacy
+Allow: /terms
+Allow: /sitemap.xml
+
+# Protected routes - Block access
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /requests
+Disallow: /proposals
+Disallow: /settings
+Disallow: /admin
+Disallow: /user/
+Disallow: /vendor/
+Disallow: /documents/
+Disallow: /*.json$
+Disallow: /*?*
+
+# Rate limiting
+Crawl-delay: 10
+
+# Sitemap reference
+Sitemap: https://arena.io/sitemap.xml
+
+# Google-specific rules
+User-agent: Googlebot
+Crawl-delay: 5
+Allow: /
+Disallow: /api/
+
+# Bing-specific rules
+User-agent: Bingbot
+Crawl-delay: 5
+Allow: /
+Disallow: /api/
+
+# Block archive.org
+User-agent: ia_archiver
+Disallow: /
+
+# Block potentially aggressive crawlers
+User-agent: AhrefsBot
+User-agent: SemrushBot
+User-agent: MJ12bot
+User-agent: DotBot
+Disallow: /

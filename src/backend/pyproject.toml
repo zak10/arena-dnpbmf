@@ -1,0 +1,122 @@
+[build-system]
+requires = ["poetry-core>=1.4.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "arena"
+version = "0.1.0"
+description = "Arena MVP - Software Evaluation Platform"
+authors = ["Arena Team"]
+readme = "README.md"
+packages = [
+    { include = "arena" }
+]
+classifiers = [
+    "Private :: Do Not Upload",
+    "Programming Language :: Python :: 3.11",
+    "Framework :: Django :: 4.2"
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+# Web Framework - v4.2.0 for latest security patches and features
+django = "^4.2.0"
+# REST API Framework - v3.14.0 for stable API features
+djangorestframework = "^3.14.0"
+# WebSocket Support - v4.0.0 for async capabilities
+channels = "^4.0.0"
+# Task Queue - v5.3.0 for improved task routing
+celery = "^5.3.0"
+# Caching and Message Broker - v4.5.0 for enhanced performance
+redis = "^4.5.0"
+# Database Adapter - v2.9.0 for PostgreSQL support
+psycopg2-binary = "^2.9.0"
+# AWS SDK - v1.26.0 for S3 and SES integration
+boto3 = "^1.26.0"
+# AI Integration - v0.3.0 for Anthropic Claude
+anthropic = "^0.3.0"
+# Authentication - v2.6.0 for secure JWT handling
+pyjwt = "^2.6.0"
+# CORS Support - v4.0.0 for secure cross-origin requests
+django-cors-headers = "^4.0.0"
+# Storage Backend - v1.13.0 for S3 integration
+django-storages = "^1.13.0"
+# Celery Integration - v2.5.0 for task scheduling
+django-celery-beat = "^2.5.0"
+django-celery-results = "^2.5.0"
+# WSGI Server - v21.2.0 for production deployment
+gunicorn = "^21.2.0"
+# Error Tracking - v1.30.0 for monitoring
+sentry-sdk = "^1.30.0"
+# JWT Handling - v3.3.0 for OAuth integration
+python-jose = "^3.3.0"
+# Health Monitoring - v3.17.0 for system checks
+django-health-check = "^3.17.0"
+# Rate Limiting - v4.1.0 for request throttling
+django-ratelimit = "^4.1.0"
+# Security - v0.9.7 for brute force protection
+django-defender = "^0.9.7"
+# Static Files - v6.5.0 for efficient serving
+whitenoise = "^6.5.0"
+
+[tool.poetry.group.dev.dependencies]
+# Testing Framework - v7.3.0 for latest features
+pytest = "^7.3.0"
+pytest-django = "^4.5.0"
+pytest-cov = "^4.0.0"
+pytest-xdist = "^3.3.0"
+# Code Formatting - v23.3.0 for Python 3.11 support
+black = "^23.3.0"
+# Import Sorting - v5.12.0 for consistency
+isort = "^5.12.0"
+# Type Checking - v1.3.0 for strict typing
+mypy = "^1.3.0"
+# Test Data Generation - v3.2.0 for fixtures
+factory-boy = "^3.2.0"
+# Security Scanning - v1.7.5 for vulnerability checks
+bandit = "^1.7.5"
+# Dependency Security - v2.3.5 for CVE checking
+safety = "^2.3.5"
+# Code Analysis - v2.17.5 for Django support
+pylint = "^2.17.5"
+pylint-django = "^2.5.3"
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+include = "\.pyi?$"
+extend-exclude = "/migrations/"
+
+[tool.isort]
+profile = "black"
+line_length = 100
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+check_untyped_defs = true
+disallow_any_generics = true
+plugins = ["mypy_django_plugin.main"]
+
+[tool.pylint]
+max-line-length = 100
+django-settings-module = "arena.settings.base"
+load-plugins = ["pylint_django"]
+disable = [
+    "missing-docstring",
+    "invalid-name"
+]
+
+[tool.pytest.ini_options]
+minversion = "7.3.0"
+addopts = "--cov=arena --cov-report=term-missing --cov-fail-under=90 -n auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+django_find_project = false
+DJANGO_SETTINGS_MODULE = "arena.settings.test"

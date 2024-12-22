@@ -1,0 +1,35 @@
+# This file defines code ownership and required reviewers for different parts of the codebase
+# Format: pattern space-separated-owners
+
+# Default ownership - Core team reviews any unspecified files
+*                                               @arena/core-team
+
+# Frontend ownership
+src/web/**                                      @arena/frontend-team
+src/web/**/__tests__/**                         @arena/qa-team @arena/frontend-team
+
+# Backend ownership
+src/backend/**                                  @arena/backend-team
+src/backend/**/tests/**                         @arena/qa-team @arena/backend-team
+
+# Core backend components - Requires senior backend and security review
+src/backend/core/**                             @arena/senior-backend @arena/security-team
+src/backend/core/**/tests/**                    @arena/qa-team @arena/senior-backend @arena/security-team
+
+# Security-critical components
+src/backend/core/security/**                    @arena/security-team @arena/senior-backend
+src/backend/core/auth/**                        @arena/security-team @arena/senior-backend
+src/backend/core/encryption/**                  @arena/security-team
+
+# AI Integration components
+src/backend/integrations/anthropic/**           @arena/ai-team @arena/security-team
+
+# Infrastructure and deployment
+infrastructure/**                               @arena/devops-team @arena/security-team
+infrastructure/terraform/security/**             @arena/security-team @arena/devops-team
+
+# CI/CD Workflows
+.github/workflows/**                            @arena/devops-team @arena/security-team
+
+# Documentation
+docs/**                                         @arena/core-team

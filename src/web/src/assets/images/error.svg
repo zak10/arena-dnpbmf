@@ -1,0 +1,60 @@
+<svg 
+  role="img" 
+  aria-label="Error illustration"
+  focusable="false"
+  viewBox="0 0 240 240"
+  xmlns="http://www.w3.org/2000/svg"
+  width="240"
+  height="240"
+>
+  <title>Error illustration</title>
+  <desc>A visual representation of an error state showing a broken connection</desc>
+
+  <!-- Background circle with 8px grid alignment -->
+  <circle 
+    cx="120" 
+    cy="120" 
+    r="112" 
+    fill="#FEE2E2" 
+    opacity="0.5"
+  />
+
+  <!-- Main error symbol using 8px grid -->
+  <g stroke="#DC2626" stroke-width="8" stroke-linecap="round">
+    <!-- Left broken connection line -->
+    <path 
+      d="M72 120 L104 120" 
+      stroke-dasharray="8,16"
+    />
+    
+    <!-- Right broken connection line -->
+    <path 
+      d="M136 120 L168 120" 
+      stroke-dasharray="8,16"
+    />
+
+    <!-- Error X symbol -->
+    <path 
+      d="M112 96 L128 144 M128 96 L112 144"
+      stroke-width="6"
+    />
+  </g>
+
+  <!-- Warning circle -->
+  <circle 
+    cx="120" 
+    cy="120" 
+    r="48" 
+    fill="none" 
+    stroke="#DC2626" 
+    stroke-width="6"
+  />
+
+  <!-- Decorative elements aligned to 8px grid -->
+  <g fill="#DC2626" opacity="0.2">
+    <circle cx="48" cy="88" r="8" />
+    <circle cx="192" cy="152" r="8" />
+    <circle cx="64" cy="176" r="8" />
+    <circle cx="176" cy="64" r="8" />
+  </g>
+</svg>

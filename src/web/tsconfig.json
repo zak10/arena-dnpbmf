@@ -1,0 +1,72 @@
+{
+  "compilerOptions": {
+    // Modern JavaScript features support
+    "target": "ES2020",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "ESNext",
+    
+    // Module resolution and imports
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+
+    // Emit configuration
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    // Type checking and safety
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // JavaScript support
+    "allowJs": true,
+
+    // Types configuration
+    "types": [
+      "vite/client",
+      "jest",
+      "node"
+    ]
+  },
+
+  // Source files configuration
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.js",
+    "src/**/*.jsx",
+    "vite.config.ts",
+    "jest.config.ts",
+    "jest.setup.ts"
+  ],
+
+  // Excluded directories
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist",
+    "coverage"
+  ],
+
+  // ts-node configuration for scripts
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  },
+
+  // References to other TypeScript projects
+  "references": [
+    { "path": "./vite.config.ts" },
+    { "path": "./jest.config.ts" }
+  ]
+}

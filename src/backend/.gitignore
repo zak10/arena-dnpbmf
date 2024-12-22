@@ -1,0 +1,72 @@
+# Python build artifacts and cache
+*.py[cod]
+__pycache__/
+*.so
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# IDE configurations
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Media and static files
+media/
+static/
+!static/.gitkeep
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env/
+
+# Local development configurations
+*.local
+local_settings.py
+
+# Database files
+*.sqlite3
+*.db
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# AWS credentials
+.aws/
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Backup files
+*.bak
+*.backup

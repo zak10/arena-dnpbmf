@@ -1,0 +1,39 @@
+# Enable automatic line ending normalization for all text files by default
+* text=auto
+
+# Windows-specific files
+*.{cmd,[cC][mM][dD]} text eol=crlf
+*.{bat,[bB][aA][tT]} text eol=crlf
+
+# Unix-specific files
+*.sh text eol=lf
+
+# Python source files
+*.{py,pyi} text diff=python
+
+# TypeScript/JavaScript source files
+*.{ts,tsx,js,jsx} text
+
+# Configuration files
+*.json text
+*.yml text
+*.yaml text
+*.tf text
+*.tfvars text
+
+# Documentation files
+*.{md,mdx} text diff=markdown
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+
+# Specific directory configurations
+/src/backend/**/*.{py,pyi} text diff=python
+/src/web/src/**/*.{ts,tsx,js,jsx} text
+/infrastructure/**/*.{tf,tfvars,sh} text

@@ -1,0 +1,279 @@
+# Arena MVP Continuous Deployment Workflow
+# Version: 1.0.0
+# Handles automated deployments to staging and production environments on AWS
+
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+    branches:
+      - main
+
+# Environment variables used across jobs
+env:
+  TF_VERSION: '1.5.0'
+  AWS_REGION: 'us-east-1'
+  DEPLOY_LOCK_TIMEOUT: '30m'
+  HEALTH_CHECK_RETRIES: '5'
+  ROLLBACK_ENABLED: 'true'
+
+# Prevent concurrent deployments
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build and Push Images
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          role-duration-seconds: 1800
+          
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: true
+          
+      - name: Run base image security scan
+        run: |
+          docker pull aquasec/trivy:latest
+          docker run --rm aquasec/trivy:latest image python:3.11-slim
+          docker run --rm aquasec/trivy:latest image nginx:alpine
+          
+      - name: Build and tag backend image
+        run: |
+          docker build \
+            --cache-from ${{ secrets.ECR_REGISTRY }}/arena-backend:latest \
+            --build-arg BUILDKIT_INLINE_CACHE=1 \
+            -t ${{ secrets.ECR_REGISTRY }}/arena-backend:${{ github.sha }} \
+            -t ${{ secrets.ECR_REGISTRY }}/arena-backend:latest \
+            ./backend
+            
+      - name: Build and tag frontend image
+        run: |
+          docker build \
+            --cache-from ${{ secrets.ECR_REGISTRY }}/arena-frontend:latest \
+            --build-arg BUILDKIT_INLINE_CACHE=1 \
+            -t ${{ secrets.ECR_REGISTRY }}/arena-frontend:${{ github.sha }} \
+            -t ${{ secrets.ECR_REGISTRY }}/arena-frontend:latest \
+            ./frontend
+            
+      - name: Scan container images
+        run: |
+          docker run --rm aquasec/trivy:latest image \
+            ${{ secrets.ECR_REGISTRY }}/arena-backend:${{ github.sha }}
+          docker run --rm aquasec/trivy:latest image \
+            ${{ secrets.ECR_REGISTRY }}/arena-frontend:${{ github.sha }}
+            
+      - name: Push images to ECR
+        run: |
+          docker push ${{ secrets.ECR_REGISTRY }}/arena-backend:${{ github.sha }}
+          docker push ${{ secrets.ECR_REGISTRY }}/arena-backend:latest
+          docker push ${{ secrets.ECR_REGISTRY }}/arena-frontend:${{ github.sha }}
+          docker push ${{ secrets.ECR_REGISTRY }}/arena-frontend:latest
+          
+      - name: Verify image signatures
+        run: |
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | \
+          docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+          docker trust inspect ${{ secrets.ECR_REGISTRY }}/arena-backend:${{ github.sha }}
+          docker trust inspect ${{ secrets.ECR_REGISTRY }}/arena-frontend:${{ github.sha }}
+
+  deploy-staging:
+    name: Deploy to Staging
+    needs: build
+    runs-on: ubuntu-latest
+    environment: staging
+    timeout-minutes: 45
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+          
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          
+      - name: Acquire deployment lock
+        run: |
+          aws dynamodb put-item \
+            --table-name arena-deploy-locks \
+            --item '{"env": {"S": "staging"}, "locked": {"BOOL": true}}' \
+            --condition-expression "attribute_not_exists(locked)"
+            
+      - name: Initialize Terraform
+        working-directory: infrastructure/terraform/environments/staging
+        run: |
+          terraform init \
+            -backend-config="bucket=${{ secrets.TF_STATE_BUCKET }}" \
+            -backend-config="key=staging/terraform.tfstate" \
+            -backend-config="region=${{ env.AWS_REGION }}"
+            
+      - name: Plan Terraform changes
+        working-directory: infrastructure/terraform/environments/staging
+        run: |
+          terraform plan \
+            -var="image_tag=${{ github.sha }}" \
+            -var="environment=staging" \
+            -out=tfplan
+            
+      - name: Apply Terraform changes
+        working-directory: infrastructure/terraform/environments/staging
+        run: terraform apply -auto-approve tfplan
+        
+      - name: Run health checks
+        run: |
+          for i in $(seq 1 ${{ env.HEALTH_CHECK_RETRIES }}); do
+            if curl -f https://staging.arena-mvp.com/health; then
+              exit 0
+            fi
+            sleep 30
+          done
+          exit 1
+          
+      - name: Release deployment lock
+        if: always()
+        run: |
+          aws dynamodb delete-item \
+            --table-name arena-deploy-locks \
+            --key '{"env": {"S": "staging"}}'
+
+  deploy-production:
+    name: Deploy to Production
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production
+    if: startsWith(github.ref, 'refs/tags/v')
+    timeout-minutes: 60
+    
+    steps:
+      - name: Verify deployment window
+        run: |
+          HOUR=$(date +%H)
+          if [ $HOUR -lt 9 ] || [ $HOUR -gt 16 ]; then
+            echo "Outside deployment window (9 AM - 5 PM EST)"
+            exit 1
+          fi
+          
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+          
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+          
+      - name: Acquire deployment lock
+        run: |
+          aws dynamodb put-item \
+            --table-name arena-deploy-locks \
+            --item '{"env": {"S": "production"}, "locked": {"BOOL": true}}' \
+            --condition-expression "attribute_not_exists(locked)"
+            
+      - name: Initialize Terraform
+        working-directory: infrastructure/terraform/environments/production
+        run: |
+          terraform init \
+            -backend-config="bucket=${{ secrets.TF_STATE_BUCKET }}" \
+            -backend-config="key=production/terraform.tfstate" \
+            -backend-config="region=${{ env.AWS_REGION }}"
+            
+      - name: Plan Terraform changes
+        working-directory: infrastructure/terraform/environments/production
+        run: |
+          terraform plan \
+            -var="image_tag=${{ github.sha }}" \
+            -var="environment=production" \
+            -out=tfplan
+            
+      - name: Deploy canary
+        run: |
+          aws ecs update-service \
+            --cluster arena-production \
+            --service arena-canary \
+            --force-new-deployment \
+            --desired-count 1
+            
+      - name: Verify canary health
+        run: |
+          for i in $(seq 1 ${{ env.HEALTH_CHECK_RETRIES }}); do
+            if curl -f https://canary.arena-mvp.com/health; then
+              exit 0
+            fi
+            sleep 30
+          done
+          exit 1
+          
+      - name: Manual approval
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ github.token }}
+          approvers: arena-devops-team
+          minimum-approvals: 2
+          timeout: 3600
+          
+      - name: Apply Terraform changes
+        working-directory: infrastructure/terraform/environments/production
+        run: terraform apply -auto-approve tfplan
+        
+      - name: Run extended health checks
+        run: |
+          for i in $(seq 1 10); do
+            if curl -f https://arena-mvp.com/health; then
+              continue
+            fi
+            if [ "$ROLLBACK_ENABLED" = "true" ]; then
+              terraform destroy -auto-approve
+              exit 1
+            fi
+            sleep 60
+          done
+          
+      - name: Verify metrics and alerts
+        run: |
+          aws cloudwatch get-metric-statistics \
+            --namespace Arena \
+            --metric-name ErrorRate \
+            --period 300 \
+            --statistics Average \
+            --threshold 1.0
+            
+      - name: Release deployment lock
+        if: always()
+        run: |
+          aws dynamodb delete-item \
+            --table-name arena-deploy-locks \
+            --key '{"env": {"S": "production"}}'

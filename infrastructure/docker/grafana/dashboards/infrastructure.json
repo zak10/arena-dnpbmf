@@ -1,0 +1,305 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "arena-infrastructure",
+    "title": "Arena Infrastructure",
+    "tags": ["infrastructure", "arena", "sla"],
+    "timezone": "browser",
+    "refresh": "30s",
+    "schemaVersion": 36,
+    "version": 1,
+    "panels": [
+      {
+        "title": "SLA Metrics",
+        "type": "row",
+        "panels": [
+          {
+            "title": "System Uptime",
+            "type": "gauge",
+            "datasource": "Prometheus",
+            "targets": [
+              {
+                "expr": "avg_over_time(up{environment=\"$env\"}[30d]) * 100",
+                "legendFormat": "{{service}} Uptime %"
+              }
+            ],
+            "thresholds": {
+              "steps": [
+                {
+                  "value": null,
+                  "color": "red"
+                },
+                {
+                  "value": 99.8,
+                  "color": "yellow"
+                },
+                {
+                  "value": 99.9,
+                  "color": "green"
+                }
+              ]
+            }
+          },
+          {
+            "title": "Page Load Time",
+            "type": "graph",
+            "datasource": "Prometheus",
+            "targets": [
+              {
+                "expr": "rate(first_contentful_paint_seconds_bucket{environment=\"$env\"}[5m])",
+                "legendFormat": "{{service}} FCP"
+              }
+            ],
+            "thresholds": [
+              {
+                "value": 2,
+                "colorMode": "critical",
+                "op": "gt",
+                "fill": true,
+                "line": true
+              }
+            ]
+          },
+          {
+            "title": "AI Processing Time",
+            "type": "graph",
+            "datasource": "Prometheus",
+            "targets": [
+              {
+                "expr": "rate(anthropic_api_duration_seconds{environment=\"$env\"}[5m])",
+                "legendFormat": "{{operation}} Latency"
+              }
+            ],
+            "thresholds": [
+              {
+                "value": 5,
+                "colorMode": "critical",
+                "op": "gt",
+                "fill": true,
+                "line": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "System Resources",
+        "type": "row",
+        "panels": [
+          {
+            "title": "CPU Usage",
+            "type": "graph",
+            "datasource": "Prometheus",
+            "targets": [
+              {
+                "expr": "rate(process_cpu_seconds_total{environment=\"$env\"}[5m])",
+                "legendFormat": "{{service}}"
+              }
+            ],
+            "alert": {
+              "name": "High CPU Usage",
+              "conditions": [
+                {
+                  "evaluator": {
+                    "params": [80],
+                    "type": "gt"
+                  },
+                  "operator": {
+                    "type": "and"
+                  },
+                  "query": {
+                    "params": ["A", "5m", "now"]
+                  },
+                  "reducer": {
+                    "params": [],
+                    "type": "avg"
+                  },
+                  "type": "query"
+                }
+              ]
+            }
+          },
+          {
+            "title": "Memory Usage",
+            "type": "graph",
+            "datasource": "Prometheus",
+            "targets": [
+              {
+                "expr": "process_resident_memory_bytes{environment=\"$env\"} / process_resident_memory_bytes_max * 100",
+                "legendFormat": "{{service}} %"
+              }
+            ],
+            "alert": {
+              "name": "High Memory Usage",
+              "conditions": [
+                {
+                  "evaluator": {
+                    "params": [85],
+                    "type": "gt"
+                  },
+                  "operator": {
+                    "type": "and"
+                  },
+                  "query": {
+                    "params": ["A", "5m", "now"]
+                  },
+                  "reducer": {
+                    "params": [],
+                    "type": "avg"
+                  },
+                  "type": "query"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "title": "Container Health",
+        "type": "row",
+        "panels": [
+          {
+            "title": "Container Status",
+            "type": "stat",
+            "datasource": "Prometheus",
+            "targets": [
+              {
+                "expr": "up{environment=\"$env\"}",
+                "legendFormat": "{{service}}"
+              }
+            ],
+            "mappings": [
+              {
+                "type": "value",
+                "options": {
+                  "0": {
+                    "text": "Down",
+                    "color": "red"
+                  },
+                  "1": {
+                    "text": "Up",
+                    "color": "green"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "title": "Container Restarts",
+            "type": "graph",
+            "datasource": "Prometheus",
+            "targets": [
+              {
+                "expr": "changes(kube_pod_container_status_restarts_total{environment=\"$env\"}[1h])",
+                "legendFormat": "{{service}}"
+              }
+            ],
+            "alert": {
+              "name": "Frequent Restarts",
+              "conditions": [
+                {
+                  "evaluator": {
+                    "params": [3],
+                    "type": "gt"
+                  },
+                  "operator": {
+                    "type": "and"
+                  },
+                  "query": {
+                    "params": ["A", "1h", "now"]
+                  },
+                  "reducer": {
+                    "params": [],
+                    "type": "sum"
+                  },
+                  "type": "query"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "title": "Network",
+        "type": "row",
+        "panels": [
+          {
+            "title": "Network I/O",
+            "type": "graph",
+            "datasource": "Prometheus",
+            "targets": [
+              {
+                "expr": "rate(container_network_receive_bytes_total{environment=\"$env\"}[5m])",
+                "legendFormat": "{{service}} Received"
+              },
+              {
+                "expr": "rate(container_network_transmit_bytes_total{environment=\"$env\"}[5m])",
+                "legendFormat": "{{service}} Transmitted"
+              }
+            ]
+          },
+          {
+            "title": "Network Latency",
+            "type": "graph",
+            "datasource": "Prometheus",
+            "targets": [
+              {
+                "expr": "rate(http_request_duration_seconds{environment=\"$env\"}[5m])",
+                "legendFormat": "{{service}} Latency"
+              }
+            ],
+            "thresholds": [
+              {
+                "value": 0.5,
+                "colorMode": "warning",
+                "op": "gt",
+                "fill": true,
+                "line": true
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "templating": {
+      "list": [
+        {
+          "name": "env",
+          "type": "query",
+          "datasource": "Prometheus",
+          "query": "label_values(environment)",
+          "refresh": 2
+        },
+        {
+          "name": "service",
+          "type": "query",
+          "datasource": "Prometheus",
+          "query": "label_values(service)",
+          "refresh": 2
+        }
+      ]
+    },
+    "time": {
+      "from": "now-6h",
+      "to": "now"
+    },
+    "annotations": {
+      "list": [
+        {
+          "name": "Deployments",
+          "datasource": "Prometheus",
+          "expr": "changes(kube_deployment_status_observed_generation{environment=\"$env\"}[5m]) > 0",
+          "tagKeys": ["service"],
+          "titleFormat": "Deployment - {{service}}"
+        },
+        {
+          "name": "Scaling Events",
+          "datasource": "Prometheus",
+          "expr": "changes(kube_deployment_spec_replicas{environment=\"$env\"}[5m]) > 0",
+          "tagKeys": ["service"],
+          "titleFormat": "Scaling - {{service}}"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,125 @@
+<svg 
+  xmlns="http://www.w3.org/2000/svg"
+  width="240"
+  height="240"
+  viewBox="0 0 240 240"
+  preserveAspectRatio="xMidYMid meet"
+  role="img"
+  aria-label="No items to display"
+  class="empty-state-illustration"
+>
+  <!-- Background Circle -->
+  <circle 
+    cx="120" 
+    cy="120" 
+    r="100"
+    fill="currentColor"
+    opacity="0.1"
+    class="empty-state-bg"
+  />
+
+  <!-- Document Stack -->
+  <g class="document-stack">
+    <!-- Back Document -->
+    <rect
+      x="85"
+      y="70"
+      width="70"
+      height="90"
+      rx="4"
+      fill="currentColor"
+      opacity="0.2"
+      transform="rotate(-5 120 120)"
+    />
+    
+    <!-- Middle Document -->
+    <rect
+      x="80"
+      y="65"
+      width="70"
+      height="90"
+      rx="4"
+      fill="currentColor"
+      opacity="0.4"
+      transform="rotate(5 120 120)"
+    />
+    
+    <!-- Front Document -->
+    <rect
+      x="75"
+      y="60"
+      width="70"
+      height="90"
+      rx="4"
+      fill="currentColor"
+      opacity="0.8"
+    />
+
+    <!-- Document Lines -->
+    <g class="document-lines" opacity="0.6">
+      <rect x="85" y="75" width="40" height="3" rx="1.5" fill="currentColor"/>
+      <rect x="85" y="85" width="50" height="3" rx="1.5" fill="currentColor"/>
+      <rect x="85" y="95" width="45" height="3" rx="1.5" fill="currentColor"/>
+      <rect x="85" y="105" width="35" height="3" rx="1.5" fill="currentColor"/>
+    </g>
+  </g>
+
+  <!-- Magnifying Glass -->
+  <g class="magnifying-glass">
+    <!-- Handle -->
+    <rect
+      x="145"
+      y="140"
+      width="25"
+      height="6"
+      rx="3"
+      transform="rotate(45 145 140)"
+      fill="currentColor"
+    />
+    
+    <!-- Glass -->
+    <circle
+      cx="130"
+      cy="130"
+      r="15"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="6"
+    />
+  </g>
+
+  <!-- Decorative Elements -->
+  <g class="decorative-elements" opacity="0.3">
+    <circle cx="60" cy="100" r="4" fill="currentColor"/>
+    <circle cx="180" cy="90" r="3" fill="currentColor"/>
+    <circle cx="170" cy="160" r="5" fill="currentColor"/>
+    <circle cx="70" cy="170" r="3" fill="currentColor"/>
+  </g>
+
+  <!-- Styles for color scheme support -->
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .empty-state-illustration {
+        color: #ffffff;
+      }
+    }
+    @media (prefers-color-scheme: light) {
+      .empty-state-illustration {
+        color: #000000;
+      }
+    }
+    @media (forced-colors: active) {
+      .empty-state-illustration {
+        color: CanvasText;
+      }
+      .empty-state-bg {
+        forced-color-adjust: none;
+      }
+    }
+    @media print {
+      .empty-state-illustration {
+        color: #000000;
+      }
+    }
+  </style>
+</svg>

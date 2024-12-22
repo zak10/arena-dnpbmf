@@ -1,0 +1,170 @@
+/* Arena MVP Animation System
+ * Version: 1.0.0
+ * 
+ * Core animation and transition styles with:
+ * - WCAG 2.1 Level AA compliance
+ * - Reduced motion support
+ * - GPU acceleration optimizations
+ * - Consistent timing variables
+ */
+
+/* Import transition timing variables */
+@import './variables.css';
+
+/* Base Keyframe Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Fade Animations */
+.animate-fade-in {
+  animation: fadeIn var(--transition-duration-normal) var(--transition-timing-ease-out);
+  will-change: opacity;
+}
+
+.animate-fade-out {
+  animation: fadeOut var(--transition-duration-normal) var(--transition-timing-ease-in);
+  will-change: opacity;
+}
+
+.animate-fade-in.paused,
+.animate-fade-out.paused {
+  animation-play-state: paused;
+}
+
+/* Slide Animations with GPU Acceleration */
+.animate-slide-in {
+  animation: slideIn var(--transition-duration-normal) var(--transition-timing-ease-out);
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+.animate-slide-out {
+  animation: slideOut var(--transition-duration-normal) var(--transition-timing-ease-in);
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+.animate-slide-in.paused,
+.animate-slide-out.paused {
+  animation-play-state: paused;
+}
+
+/* Loading Animations */
+.animate-spin {
+  animation: spin 1s linear infinite;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.animate-spin.paused,
+.animate-pulse.paused {
+  animation-play-state: paused;
+}
+
+/* Common Transitions */
+.transition-transform {
+  transition: transform var(--transition-duration-fast) var(--transition-timing-ease);
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.transition-opacity {
+  transition: opacity var(--transition-duration-fast) var(--transition-timing-ease);
+  will-change: opacity;
+}
+
+.transition-colors {
+  transition: 
+    background-color var(--transition-duration-fast) var(--transition-timing-ease),
+    border-color var(--transition-duration-fast) var(--transition-timing-ease),
+    color var(--transition-duration-fast) var(--transition-timing-ease);
+}
+
+/* Hover Animations */
+.hover-scale {
+  transform: scale(1) translateZ(0);
+  transition: transform var(--transition-duration-fast) var(--transition-timing-ease);
+  will-change: transform;
+}
+
+.hover-scale:hover {
+  transform: scale(1.05) translateZ(0);
+}
+
+.hover-lift {
+  transform: translateY(0) translateZ(0);
+  transition: transform var(--transition-duration-fast) var(--transition-timing-ease);
+  will-change: transform;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px) translateZ(0);
+}
+
+/* Accessibility - Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .animate-spin,
+  .animate-pulse {
+    animation: none !important;
+  }
+  
+  .hover-scale:hover,
+  .hover-lift:hover {
+    transform: none !important;
+  }
+}

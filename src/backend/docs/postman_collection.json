@@ -1,0 +1,292 @@
+{
+  "info": {
+    "name": "Arena MVP API",
+    "description": "Comprehensive API collection for Arena software evaluation platform with enhanced test coverage",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "{{baseUrl}}",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "{{authToken}}",
+      "type": "string"
+    },
+    {
+      "key": "refreshToken", 
+      "value": "{{refreshToken}}",
+      "type": "string"
+    },
+    {
+      "key": "googleOAuthToken",
+      "value": "{{googleOAuthToken}}",
+      "type": "string"
+    },
+    {
+      "key": "testEmail",
+      "value": "{{testEmail}}",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "description": "Authentication endpoints with comprehensive flow testing",
+      "item": [
+        {
+          "name": "Request Magic Link",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/magic-link",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "magic-link"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{testEmail}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Rate limit headers are present', function() {",
+                  "    pm.response.to.have.header('X-RateLimit-Limit');",
+                  "    pm.response.to.have.header('X-RateLimit-Remaining');",
+                  "});",
+                  "",
+                  "pm.test('Invalid email format returns 400', function() {",
+                  "    if (pm.request.body.raw.includes('invalid@')) {",
+                  "        pm.response.to.have.status(400);",
+                  "        var jsonData = pm.response.json();",
+                  "        pm.expect(jsonData.code).to.equal('E1001');",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Google OAuth Authentication",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/google",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "auth", "google"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{googleOAuthToken}}\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response contains auth tokens', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.access_token).to.exist;",
+                  "    pm.expect(jsonData.refresh_token).to.exist;",
+                  "});",
+                  "",
+                  "pm.test('Tokens are valid JWT format', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.access_token).to.match(/^[A-Za-z0-9-_]*\\.[A-Za-z0-9-_]*\\.[A-Za-z0-9-_]*$/);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Requests",
+      "description": "Software request management endpoints with validation",
+      "item": [
+        {
+          "name": "Create Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/requests",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "requests"]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "requirements_text",
+                  "value": "Looking for CRM software with email integration",
+                  "type": "text"
+                },
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 201', function() {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test('Response contains request ID', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.id).to.exist;",
+                  "    pm.expect(jsonData.id).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);",
+                  "});",
+                  "",
+                  "pm.test('File size validation', function() {",
+                  "    if (pm.request.body.formdata.get('files').size > 10485760) {",
+                  "        pm.response.to.have.status(400);",
+                  "        var jsonData = pm.response.json();",
+                  "        pm.expect(jsonData.code).to.equal('E2003');",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Proposals",
+      "description": "Enhanced proposal management endpoints",
+      "item": [
+        {
+          "name": "Update Proposal Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/proposals/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "proposals", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"accepted\",\n  \"reason\": \"Meets all requirements\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Status transition is valid', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(['accepted', 'rejected']).to.include(jsonData.status);",
+                  "});",
+                  "",
+                  "pm.test('Audit trail is updated', function() {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.audit_trail).to.exist;",
+                  "    pm.expect(jsonData.audit_trail[0].action).to.equal('status_update');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Global pre-request script",
+          "if (!pm.variables.get('authToken')) {",
+          "    console.log('Warning: authToken not set');",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Global test script",
+          "pm.test('Response headers', function() {",
+          "    pm.response.to.have.header('Content-Type');",
+          "    pm.response.to.have.header('X-Request-ID');",
+          "});"
+        ]
+      }
+    }
+  ]
+}

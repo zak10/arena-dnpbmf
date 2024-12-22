@@ -1,0 +1,200 @@
+/* Arena MVP Tailwind CSS Configuration
+ * Version: 1.0.0
+ * Dependencies: 
+ * - tailwindcss@3.3+
+ * - @tailwindcss/forms@0.5+
+ * - @tailwindcss/typography@0.5+
+ * - @tailwindcss/aspect-ratio@0.4+
+ * - @tailwindcss/line-clamp@0.4+
+ */
+
+@import './variables.css';
+@import './components.css';
+
+/* Tailwind Base Layer */
+@tailwind base;
+
+@layer base {
+  /* Base HTML Element Styles */
+  html {
+    font-size: var(--font-size-base);
+    font-family: var(--font-family-base);
+    line-height: var(--line-height-base);
+    color: var(--color-text);
+    background-color: var(--color-background);
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Fluid Typography Scale */
+  @media screen and (min-width: 320px) {
+    html {
+      font-size: calc(14px + 2 * ((100vw - 320px) / 1120));
+    }
+  }
+
+  @media screen and (min-width: 1440px) {
+    html {
+      font-size: 16px;
+    }
+  }
+
+  /* Focus Styles */
+  *:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* Tailwind Components Layer */
+@tailwind components;
+
+@layer components {
+  /* Layout Patterns */
+  .f-pattern {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--spacing-4);
+    padding: var(--spacing-4);
+  }
+
+  .z-pattern {
+    display: grid;
+    grid-template-areas: 
+      "header header"
+      "main aside"
+      "footer footer";
+    gap: var(--spacing-8);
+    padding: var(--spacing-4);
+  }
+
+  /* Grid System */
+  .grid-8 {
+    display: grid;
+    gap: var(--spacing-2);
+  }
+
+  @screen md {
+    .grid-8 {
+      gap: var(--spacing-4);
+    }
+  }
+
+  @screen lg {
+    .grid-8 {
+      gap: var(--spacing-8);
+    }
+  }
+}
+
+/* Tailwind Utilities Layer */
+@tailwind utilities;
+
+@layer utilities {
+  /* Theme Support */
+  .theme-light {
+    color-scheme: light;
+  }
+
+  .theme-dark {
+    color-scheme: dark;
+  }
+
+  /* High Contrast Mode */
+  @media (prefers-contrast: high) {
+    .high-contrast {
+      --color-primary: #0000FF;
+      --color-text: #000000;
+      --color-background: #FFFFFF;
+      --color-border: #000000;
+    }
+  }
+
+  /* Container Queries */
+  @container (min-width: 320px) {
+    .responsive-container {
+      padding: var(--spacing-2);
+    }
+  }
+
+  @container (min-width: 768px) {
+    .responsive-container {
+      padding: var(--spacing-4);
+    }
+  }
+
+  @container (min-width: 1024px) {
+    .responsive-container {
+      padding: var(--spacing-8);
+    }
+  }
+
+  /* Accessibility Utilities */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .focus-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+  }
+}
+
+/* Print Styles */
+@layer print {
+  @media print {
+    /* Print-specific styles */
+    body {
+      color: black;
+      background: white;
+    }
+
+    /* Remove unnecessary elements */
+    .no-print {
+      display: none !important;
+    }
+
+    /* Ensure proper page breaks */
+    .page-break {
+      page-break-before: always;
+    }
+
+    /* Expand collapsed content */
+    .print-expand {
+      display: block !important;
+      height: auto !important;
+      overflow: visible !important;
+    }
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+
+  /* Dark mode overrides */
+  .dark\:theme-dark {
+    --color-background: var(--color-background-dark);
+    --color-text: var(--color-text-dark);
+  }
+}

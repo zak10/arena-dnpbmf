@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+    <meta charset="utf-8">
+    <meta name="x-apple-disable-message-reformatting">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no">
+    <!--[if mso]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+    </xml>
+    <style>
+        table {border-collapse: collapse;}
+        td,th,div,p,a,h1,h2,h3,h4,h5,h6 {font-family: "Segoe UI", sans-serif; mso-line-height-rule: exactly;}
+    </style>
+    <![endif]-->
+    
+    <title>New Proposal Received</title>
+    <style>
+        /* Base styles */
+        :root {
+            color-scheme: light dark;
+            supported-color-schemes: light dark;
+        }
+        
+        html,body {
+            margin: 0 auto !important;
+            padding: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        
+        * {
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+        
+        /* Typography */
+        body {
+            font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #111827;
+            background-color: #FFFFFF;
+        }
+        
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #1F2937;
+                color: #F9FAFB;
+            }
+            .dark-mode-invert {
+                filter: invert(1) hue-rotate(180deg);
+            }
+        }
+        
+        /* Responsive breakpoints */
+        @media only screen and (max-width: 480px) {
+            .mobile-p {
+                padding: 16px !important;
+            }
+            .mobile-col {
+                display: block !important;
+                width: 100% !important;
+            }
+        }
+        
+        /* Hide preview text */
+        .preview-text {
+            display: none;
+            max-height: 0;
+            overflow: hidden;
+            font-size: 1px;
+            line-height: 1px;
+            color: #FFFFFF;
+        }
+        
+        /* Button styles */
+        .button {
+            display: inline-block;
+            padding: 16px 32px;
+            background-color: #4F46E5;
+            color: #FFFFFF;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            mso-padding-alt: 0;
+            text-underline-color: #4F46E5;
+        }
+        
+        /* MSO button fallback */
+        .button-td {
+            border-radius: 6px;
+            background: #4F46E5;
+            mso-padding-alt: 16px 32px;
+        }
+    </style>
+</head>
+<body style="word-break: break-word; -webkit-font-smoothing: antialiased; margin: 0; width: 100%; padding: 0;">
+    <!-- Preview text -->
+    <div class="preview-text">
+        {{ preview_text }}
+    </div>
+    
+    <!-- Main table -->
+    <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%; margin: 0; padding: 0; background-color: #F3F4F6;">
+        <tr>
+            <td align="center" style="padding: 24px 0;">
+                <!-- Email container -->
+                <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 600px; margin: 0; padding: 0; background-color: #FFFFFF; border-radius: 8px; overflow: hidden;">
+                    <!-- Header -->
+                    <tr>
+                        <td style="padding: 24px; text-align: center; background-color: #FFFFFF;">
+                            <img src="https://arena-assets.s3.amazonaws.com/logo.png" alt="Arena Logo" width="120" style="border: 0; max-width: 100%; vertical-align: middle;" class="dark-mode-invert">
+                        </td>
+                    </tr>
+                    
+                    <!-- Content -->
+                    <tr>
+                        <td class="mobile-p" style="padding: 24px;">
+                            <h1 style="margin: 0 0 24px; font-size: 24px; font-weight: 600; color: #111827;">
+                                New Proposal Received
+                            </h1>
+                            
+                            <p style="margin: 0 0 24px; font-size: 16px; color: #374151;">
+                                Hi {{ buyer_name }},
+                            </p>
+                            
+                            <p style="margin: 0 0 24px; font-size: 16px; color: #374151;">
+                                Great news! {{ vendor_name }} has submitted a proposal for your software evaluation request: <strong>{{ request_title }}</strong>.
+                            </p>
+                            
+                            <!-- CTA Button -->
+                            <table role="presentation" cellpadding="0" cellspacing="0" style="margin: 32px 0;">
+                                <tr>
+                                    <td align="center" class="button-td">
+                                        <!--[if mso]>
+                                        <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="{{ proposal_url }}" style="height:50px;v-text-anchor:middle;width:200px;" arcsize="10%" stroke="f" fillcolor="#4F46E5">
+                                            <w:anchorlock/>
+                                            <center>
+                                        <![endif]-->
+                                        <a href="{{ proposal_url }}" class="button" style="color: #FFFFFF;">
+                                            Review Proposal
+                                        </a>
+                                        <!--[if mso]>
+                                            </center>
+                                        </v:roundrect>
+                                        <![endif]-->
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding: 24px; background-color: #F9FAFB; border-top: 1px solid #E5E7EB;">
+                            <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%;">
+                                <tr>
+                                    <td style="padding-bottom: 16px; text-align: center; font-size: 14px; color: #6B7280;">
+                                        <p style="margin: 0 0 8px;">
+                                            Arena Technologies Inc.<br>
+                                            123 Market Street, Suite 100<br>
+                                            San Francisco, CA 94105
+                                        </p>
+                                        <p style="margin: 0;">
+                                            <a href="{{ unsubscribe_url }}" style="color: #6B7280; text-decoration: underline;">Unsubscribe</a> •
+                                            <a href="https://arena.io/privacy" style="color: #6B7280; text-decoration: underline;">Privacy Policy</a> •
+                                            <a href="https://arena.io/terms" style="color: #6B7280; text-decoration: underline;">Terms of Service</a>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    
+    <!-- Tracking pixel -->
+    <img src="{{ tracking_pixel }}" alt="" width="1" height="1" border="0" style="height:1px !important;width:1px !important;border-width:0 !important;margin-top:0 !important;margin-bottom:0 !important;margin-right:0 !important;margin-left:0 !important;padding-top:0 !important;padding-bottom:0 !important;padding-right:0 !important;padding-left:0 !important;">
+</body>
+</html>

@@ -1,0 +1,62 @@
+{
+  "manifest_version": 2,
+  "name": "Arena - Software Evaluation Platform",
+  "short_name": "Arena",
+  "description": "Streamlined software vendor evaluation platform for business leaders",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16", 
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "scope": "/",
+  "prefer_related_applications": false,
+  "categories": ["business", "productivity"],
+  "dir": "ltr",
+  "lang": "en-US",
+  "shortcuts": [
+    {
+      "name": "Create Request",
+      "url": "/requests/new",
+      "description": "Create a new software evaluation request"
+    },
+    {
+      "name": "View Proposals",
+      "url": "/proposals",
+      "description": "View received vendor proposals"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/desktop.webp",
+      "sizes": "1920x1080",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "Desktop view of Arena platform"
+    },
+    {
+      "src": "screenshots/mobile.webp", 
+      "sizes": "750x1334",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Mobile view of Arena platform"
+    }
+  ],
+  "related_applications": [],
+  "iarc_rating_id": "",
+  "edge_side_panel": {
+    "preferred_width": 480
+  }
+}

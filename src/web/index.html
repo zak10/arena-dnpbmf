@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <!-- Character encoding -->
+    <meta charset="utf-8">
+    
+    <!-- Responsive viewport settings -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- PWA theme color -->
+    <meta name="theme-color" content="#ffffff">
+    
+    <!-- Primary meta tags -->
+    <meta name="description" content="Arena MVP - Software evaluation platform for business leaders">
+    <meta name="application-name" content="Arena">
+    <meta name="apple-mobile-web-app-title" content="Arena">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    
+    <!-- Open Graph meta tags -->
+    <meta property="og:title" content="Arena - Software Evaluation Platform">
+    <meta property="og:description" content="Streamline your software vendor selection process with Arena's anonymous evaluation platform">
+    <meta property="og:type" content="website">
+    
+    <!-- Twitter Card meta tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <!-- Security headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com https://browser.sentry-cdn.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.amazonaws.com; connect-src 'self' https://*.arena.com https://www.google-analytics.com">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+    
+    <!-- Resource hints for performance -->
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://browser.sentry-cdn.com">
+    <link rel="preload" href="/static/fonts/main.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <!-- PWA manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/logo.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/css/global.css">
+    <link rel="stylesheet" href="/static/css/tailwind.css">
+    
+    <title>Arena - Software Evaluation Platform</title>
+</head>
+<body>
+    <!-- Application root -->
+    <div id="root"></div>
+    
+    <!-- Error boundary fallback -->
+    <div id="error-boundary" style="display: none;">
+        Something went wrong. Please try refreshing the page.
+    </div>
+    
+    <!-- No JavaScript fallback -->
+    <noscript>
+        <div class="noscript-message">
+            JavaScript is required to use Arena. Please enable JavaScript in your browser settings.
+        </div>
+    </noscript>
+    
+    <!-- Analytics (async loading) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXX"></script>
+    
+    <!-- Error tracking -->
+    <script async src="https://browser.sentry-cdn.com/7.x/bundle.min.js"></script>
+    
+    <!-- Application entry point -->
+    <script type="module" src="/static/js/index.js"></script>
+    
+    <!-- Browser support check -->
+    <script>
+        // Check minimum browser versions
+        const minVersions = {
+            chrome: 90,
+            firefox: 88,
+            safari: 14,
+            edge: 90
+        };
+        
+        // Only show warning in development
+        if (process.env.NODE_ENV === 'development') {
+            const ua = navigator.userAgent;
+            const isSupported = (
+                (/Chrome\/([0-9]+)/.test(ua) && parseInt(RegExp.$1) >= minVersions.chrome) ||
+                (/Firefox\/([0-9]+)/.test(ua) && parseInt(RegExp.$1) >= minVersions.firefox) ||
+                (/Version\/([0-9]+)/.test(ua) && parseInt(RegExp.$1) >= minVersions.safari) ||
+                (/Edg\/([0-9]+)/.test(ua) && parseInt(RegExp.$1) >= minVersions.edge)
+            );
+            
+            if (!isSupported) {
+                console.warn('Browser version may not be fully supported. Please upgrade for best experience.');
+            }
+        }
+    </script>
+</body>
+</html>

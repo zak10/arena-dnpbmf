@@ -1,0 +1,30 @@
+node_modules/*
+
+# Build outputs
+build/*
+dist/*
+
+# Test coverage
+coverage/*
+
+# Minified files
+*.min.js
+
+# TypeScript declarations
+*.d.ts
+
+# Static assets
+public/*
+
+# Package manager files
+package.json
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Configuration files
+jest.config.ts
+jest.setup.ts
+vite.config.ts
+tailwind.config.js
+postcss.config.js
